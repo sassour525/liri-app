@@ -6,15 +6,6 @@ var keys = require('./keys.js'); //holds twitter API key values
 var twitterKeysArray = []; //array to hold each key returned from keys file
 var userChoice= [];
 
-var log4js = require('log4js');
-log4js.configure({
-  appenders: [
-    { type: 'file', filename: 'logs/liriLog.log', category: 'liriLogs' }
-  ]
-});
-
-var logger = log4js.getLogger('liriLogs');
-
 //loop through obj returned from keys to populate array of keys to use later when calling twitter API
 for (prop in keys.twitterKeys) {
     twitterKeysArray.push(keys.twitterKeys[prop]);
@@ -25,22 +16,28 @@ for (i = 3; i < process.argv.length; i++) {
     userChoice.push(process.argv[i]);
 }
 
+//take user input array and split out the items to form a string
 var choice = userChoice.join(' ');
 
+//conditionals to determine which function to call based on user input
 if (appToRun == 'my-tweets') {
-    logger.info('Tweets:');
+    console.log('Tweets:');
+    fs.appendFile("logs/liriLog.log", 'Tweets:' + '\n', function(err, data){});
     generateTwitterRequest(twitterKeysArray);
 
 } else if (appToRun == 'spotify-this-song') {
     console.log('Spotify:');
+    fs.appendFile("logs/liriLog.log", 'Spotify:' + '\n', function(err, data){});
     generateSpotifyRequest(choice);
 
 } else if (appToRun == 'movie-this') {
     console.log('Movie:');
+    fs.appendFile("logs/liriLog.log", 'Movie:' + '\n', function(err, data){});
     generateIMDBRequest(choice);
 
 } else if (appToRun == 'do-what-it-says') {
     console.log('Do what it says:');
+    fs.appendFile("logs/liriLog.log", 'Do what it says:' + '\n', function(err, data){});
     doWhatItSays();
 
 }
@@ -64,11 +61,10 @@ function generateTwitterRequest(twitterKeysArray) {
                 console.log('=======================');
                 console.log('');
                 //redirect to log file
-                logger.info('=======================');
-                logger.info(tweets[i].text);
-                logger.info(tweets[i].created_at);
-                logger.info('=======================');
-                logger.info('');
+                fs.appendFile("logs/liriLog.log", '=======================' + '\n', function(err, data){});
+                fs.appendFile("logs/liriLog.log", tweets[i].text + '\n', function(err, data){});
+                fs.appendFile("logs/liriLog.log", tweets[i].created_at + '\n', function(err, data){});
+                fs.appendFile("logs/liriLog.log", '=======================' + '\n', function(err, data){});
             }
         }
     });
@@ -93,12 +89,12 @@ function generateSpotifyRequest(choice) {
         console.log("Album: " + data.tracks.items[1].album.name);
         console.log('=======================');
         //redirect to log file
-        logger.info('=======================');
-        logger.info("Artist: " + data.tracks.items[1].artists[0].name);
-        logger.info("Song Name: " + data.tracks.items[1].name);
-        logger.info("Link to Song: " + data.tracks.items[0].external_urls.spotify);
-        logger.info("Album: " + data.tracks.items[1].album.name);
-        logger.info('=======================');
+        fs.appendFile("logs/liriLog.log", '=======================' + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", data.tracks.items[1].artists[0].name + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", data.tracks.items[1].name + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", data.tracks.items[0].external_urls.spotify + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", data.tracks.items[1].album.name + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", '=======================' + '\n', function(err, data){});
     });
 }
 
@@ -121,17 +117,18 @@ function generateIMDBRequest(choice) {
         console.log('Rotten Romatoes URL: ' + movieResponse.tomatoURL);
         console.log('=======================');
         //redirect to log file
-        logger.info('=======================');
-        logger.info('Title: ' + movieResponse.Title);
-        logger.info('Year: ' + movieResponse.Year);
-        logger.info('IMDB Rating: ' + movieResponse.imdbRating);
-        logger.info('Country: ' + movieResponse.Country);
-        logger.info('Language: ' + movieResponse.Language);
-        logger.info('Plot: ' + movieResponse.Plot);
-        logger.info('Actors: ' + movieResponse.Actors);
-        logger.info('Rotten Tomatoes Rating: ' + movieResponse.tomatoRating);
-        logger.info('Rotten Romatoes URL: ' + movieResponse.tomatoURL);
-        logger.info('=======================');
+        fs.appendFile("logs/liriLog.log", '=======================' + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.Title + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.Year + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.imdbRating + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.Country + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.Language + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.Plot + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.Actors + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.tomatoRating + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", movieResponse.tomatoURL + '\n', function(err, data){});
+        fs.appendFile("logs/liriLog.log", '=======================' + '\n', function(err, data){});
+
         
     });
 }
